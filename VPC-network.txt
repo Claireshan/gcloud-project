@@ -1,0 +1,105 @@
+gcloud compute networks subnets list
+gcloud compute routes list
+gcloud compute firewall-rules list
+gcloud compute firewall-rules delete default-allow-internal default-allow-icmp default-allow-rdp default-allow-ssh 
+gcloud compute networks delete default
+gcloud compute routes list
+gcloud compute firewall-rules list
+gcloud compute instances create test-instance
+
+gcloud compute networks create mynetwork \
+    --subnet-mode=auto \
+    
+    
+gcloud compute firewall-rules create deny-mynetwork-access \
+    --network mynetwork \
+    --action deny \
+    --direction ingress \
+    --rules tcp:22,tcp:3389,icmp \
+    --source-ranges 0.0.0.0/0 \
+    --priority 1000 
+  
+gcloud compute firewall-rules create mynetwork-allow-ssh \
+    --network mynetwork  \
+    --action allow \
+    --direction egress \
+    --rules  tcp:22 \
+    --priority 60
+
+gcloud compute firewall-rules create mynetwork-allow-internal \
+    --network mynetwork  \
+    --action allow \
+    --direction egress \
+    --rules  tcp:3389 \
+    --priority 60
+
+gcloud compute firewall-rules create mynetwork-allow-icmp \
+    --network mynetwork  \
+    --action allow \
+    --direction egress \
+    --rules icmp \
+    --priority 60
+
+gcloud alpha compute networks list-ip-addresses mynetwork
+
+gcloud compute instances create mynet-us-vm \
+        --zone us-central1-c \
+        --network mynetwork \
+	--machine-type 	e2-micro 
+
+gcloud compute instances describe mynet-us-vm \
+  --format='get(networkInterfaces[0].networkIP)'
+
+gcloud compute instances create mynet-eu-vm \
+        --zone 	europe-west1-c \
+	--network mynetwork \
+	--machine-type 	e2-micro
+
+gcloud compute instances describe mynet-eu-vm \
+  --format='get(networkInterfaces[0].networkIP)'
+
+gcloud compute instances describe mynet-eu-vm \
+  --format='get(networkInterfaces[0].accessConfigs[0].natIP)'
+
+gcloud compute firewall-rules create allow-ssh-and-icmp-mynetwork-access \
+    --network mynetwork \
+    --action allow \
+    --direction ingress \
+    --rules tcp:22,tcp:3389,icmp \
+    --source-ranges 0.0.0.0/0 \
+    --priority 100
+
+gcloud compute ssh mynet-us-vm --zone=us-central1-c
+
+ping -c 3 <Enter mynet-eu-vm's internal IP here>
+
+ping -c 3 mynet-eu-vm
+
+ping -c 3 <Enter mynet-eu-vm's external IP here>
+
+exit
+
+gcloud compute firewall-rules delete mynetwork-allow-icmp
+
+gcloud compute ssh mynet-us-vm --zone=us-central1-c
+
+ping -c 3 <Enter mynet-eu-vm's internal IP here>
+
+ping -c 3 <Enter mynet-eu-vm's external IP here>
+
+exit
+
+gcloud compute firewall-rules delete mynetwork-allow-internal
+
+gcloud compute ssh mynet-us-vm --zone=us-central1-c
+
+ping -c 3 <Enter mynet-eu-vm's internal IP here>
+
+exit
+
+gcloud compute firewall-rules delete  mynetwork-allow-ssh 
+
+gcloud compute ssh mynet-us-vm --zone=us-central1-c
+
+
+	

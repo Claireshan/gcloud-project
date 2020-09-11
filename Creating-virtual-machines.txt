@@ -1,0 +1,32 @@
+export INSTANCE_NAME="my-first-instance"
+gcloud compute instances create $INSTANCE_NAME \
+        --zone us-central1-c \
+	--machine-type n1-standard-1 \
+	--no-address
+
+gcloud compute instances describe my-first-instance
+       
+gcloud compute instances create my-second1-instance \
+    --zone europe-west2-a \
+    --image-project windows-sever \
+    --image-family Windows-Server-2016-Datacenter-Core \
+    --machine-type n1-standard-2 \
+    --boot-disk-type pd-ssd \
+    --boot-disk-size 100 
+    
+gcloud compute firewall-rules create FIREWALL_RULE --allow tcp:80,tcp:443
+gcloud compute reset-windows-password my-second-instance
+
+gcloud compute instances create my-third-image \
+        --zone us-west1-b \
+        --machine-type 
+        --custom-cpu 6 \
+        --custom-memory 32 
+
+gcloud compute ssh my-third-image --zone=us-west1-b
+free
+sudo dmidecode -t 17
+nproc
+lscpu
+exit
+        
