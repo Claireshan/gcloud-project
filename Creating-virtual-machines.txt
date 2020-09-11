@@ -8,8 +8,7 @@ gcloud compute instances describe my-first-instance
        
 gcloud compute instances create my-second1-instance \
     --zone europe-west2-a \
-    --image-project windows-sever \
-    --image-family Windows-Server-2016-Datacenter-Core \
+    --image Windows-Server-2016-Datacenter-Core \
     --machine-type n1-standard-2 \
     --boot-disk-type pd-ssd \
     --boot-disk-size 100 
